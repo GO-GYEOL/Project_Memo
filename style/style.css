@@ -1,0 +1,113 @@
+:root {
+  /* --bg-main-color: #00000080; */
+  --bg-main-color: #b1bbd6;
+  --bg-accent-color: #2d2d2d;
+  --accent-color: #f64435;
+  --text-accent-color: #ffe498;
+  --text-edit-bg-color: #575757;
+  --border-color: #3f3f3f;
+  --shadow-color: #202020;
+  --document-bg-color: #68686850;
+  --component-bg-gradient: radial-gradient(
+    circle,
+    #646464e6 0%,
+    #363636e6 100%
+  );
+  --smokywhite: #dddbd8;
+  --black: #000000;
+  --translucent-black: #00000099;
+}
+ul {
+  list-style: none;
+  padding-left: 0px;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  background-color: var(--bg-main-color);
+  margin: 0px;
+}
+
+.app {
+  width: 100%;
+  max-width: 1000px;
+  box-sizing: content-box;
+  margin: 100px;
+  border: 1px solid black;
+  background-color: white;
+}
+
+/* banner&document */
+.bannerAndDocument {
+  display: flex;
+  height: 100%;
+}
+
+/* banner(header) */
+.banner {
+  flex-basis: 25%;
+  text-align: center;
+  background-color: red;
+  border: 1px solid transparent;
+  height: 100%;
+}
+
+.banner__title {
+  margin-top: 50px;
+  margin-bottom: 100px;
+}
+
+.create-button {
+  width: 100%;
+  padding: 10px;
+  border: 0px;
+  margin-bottom: 5px;
+}
+
+/* document */
+.document {
+  flex-basis: 80%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  /* Firefox */
+  scrollbar-width: 6px;
+  scrollbar-color: var(--bg-accent-color);
+  scrollbar-face-color: var(--accent-color);
+}
+.document::-webkit-scrollbar {
+  /* Safari and Chrome */
+  background-color: var(--bg-accent-color);
+  width: 6px;
+}
+.document::-webkit-scrollbar-thumb {
+  /* Safari and Chrome */
+  background-color: var(--accent-color);
+}
+
+/* pageComponent */
+.page {
+  background: blue;
+}
+
+
+/* pageItemComponent */
+.page-item {
+  width: 100%;
+}
+
+/* image */
+.image {
+  display: flex;
+  padding: 30px;
+  box-sizing: border-box;
+}
+.image__holder {
+  flex-basis: 60%;
+}
+.image__thumbnail {
+  width: 100%;
+}
