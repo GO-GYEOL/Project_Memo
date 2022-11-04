@@ -6,9 +6,10 @@ import { VideoComponent } from "./components/page/item/video.js";
 import { InputDialog } from "./components/dialog/dialog.js";
 import { MediaSectionInput } from "./components/dialog/input/media-input.js";
 import { TextSectionInput } from "./components/dialog/input/text-input.js";
+import { BaseComponent } from "./components/component.js";
 
-interface SectionInput {
-  new (): MediaSectionInput | TextSectionInput;
+interface SectionInput<T> {
+  new (): T;
 }
 
 class App {
@@ -24,16 +25,44 @@ class App {
     this.pageComponent.addChild(
       new ImageComponent("이미지1", "https://picsum.photos/800/400.jpg")
     );
-    this.pageComponent.addChild(new NoteComponent("asd", "zzz"))
-    this.pageComponent.addChild(new ToDoComponent('zzz', 'qwe'))
+    this.pageComponent.addChild(new NoteComponent("asd", "zzz"));
+    this.pageComponent.addChild(new ToDoComponent("zzz", "qwe"));
 
-    this.makeNewElement("#new-image", MediaSectionInput);
-    this.makeNewElement("#new-video", MediaSectionInput);
-    this.makeNewElement("#new-note", TextSectionInput);
-    this.makeNewElement("#new-todo", TextSectionInput);
+    this.activeAddButton<MediaSectionInput>(
+      "#new-image",
+      MediaSectionInput,
+      (input: MediaSectionInput) => {
+        return new ImageComponent(input.title, input.url);
+      }
+    );
+    this.activeAddButton<MediaSectionInput>(
+      "#new-video",
+      MediaSectionInput,
+      (input: MediaSectionInput) => {
+        return new VideoComponent(input.title, input.url);
+      }
+    );
+    this.activeAddButton<TextSectionInput>(
+      "#new-note",
+      TextSectionInput,
+      (input: TextSectionInput) => {
+        return new NoteComponent(input.title, input.body);
+      }
+    );
+    this.activeAddButton<TextSectionInput>(
+      "#new-todo",
+      TextSectionInput,
+      (input: TextSectionInput) => {
+        return new ToDoComponent(input.title, input.body);
+      }
+    );
   }
 
-  makeNewElement(selector: string, InputComponentConstructor: SectionInput) {
+  activeAddButton<T extends TextSectionInput | MediaSectionInput>(
+    selector: string,
+    InputComponentConstructor: SectionInput<T>, // 여기서 결정
+    makeComponent: (input: T) => BaseComponent
+  ) {
     const button = document.querySelector(selector)! as HTMLButtonElement;
     button.addEventListener("click", () => {
       const dialog = new InputDialog();
@@ -46,32 +75,9 @@ class App {
         dialog.removeFrom(this.dialogRoot);
       });
       dialog.setOnSubmitListener(() => {
-        if ("url" in inputSection && selector === "#new-image") {
-          const image = new ImageComponent(
-            inputSection.title,
-            inputSection.url
-          );
-          this.pageComponent.addChild(image);
-          dialog.removeFrom(this.dialogRoot);
-        }
-        if ("url" in inputSection && selector === "#new-video") {
-          const video = new VideoComponent(
-            inputSection.title,
-            inputSection.url
-          );
-          this.pageComponent.addChild(video);
-          dialog.removeFrom(this.dialogRoot);
-        }
-        if ("body" in inputSection && selector === "#new-note") {
-          const note = new NoteComponent(inputSection.title, inputSection.body);
-          this.pageComponent.addChild(note);
-          dialog.removeFrom(this.dialogRoot);
-        }
-        if ("body" in inputSection && selector === "#new-todo") {
-          const note = new ToDoComponent(inputSection.title, inputSection.body);
-          this.pageComponent.addChild(note);
-          dialog.removeFrom(this.dialogRoot);
-        }
+        const data = makeComponent(inputSection);
+        this.pageComponent.addChild(data);
+        dialog.removeFrom(this.dialogRoot);
       });
     });
   }
