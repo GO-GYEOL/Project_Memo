@@ -28,28 +28,28 @@ class App {
     this.pageComponent.addChild(new NoteComponent("asd", "zzz"));
     this.pageComponent.addChild(new ToDoComponent("zzz", "qwe"));
 
-    this.activeAddButton<MediaSectionInput>(
+    this.activeMainButton<MediaSectionInput>(
       "#new-image",
       MediaSectionInput,
       (input: MediaSectionInput) => {
         return new ImageComponent(input.title, input.url);
       }
     );
-    this.activeAddButton<MediaSectionInput>(
+    this.activeMainButton<MediaSectionInput>(
       "#new-video",
       MediaSectionInput,
       (input: MediaSectionInput) => {
         return new VideoComponent(input.title, input.url);
       }
     );
-    this.activeAddButton<TextSectionInput>(
+    this.activeMainButton<TextSectionInput>(
       "#new-note",
       TextSectionInput,
       (input: TextSectionInput) => {
         return new NoteComponent(input.title, input.body);
       }
     );
-    this.activeAddButton<TextSectionInput>(
+    this.activeMainButton<TextSectionInput>(
       "#new-todo",
       TextSectionInput,
       (input: TextSectionInput) => {
@@ -58,7 +58,7 @@ class App {
     );
   }
 
-  activeAddButton<T extends TextSectionInput | MediaSectionInput>(
+  activeMainButton<T extends TextSectionInput | MediaSectionInput>(
     selector: string,
     InputComponentConstructor: SectionInput<T>, // 여기서 결정
     makeComponent: (input: T) => BaseComponent

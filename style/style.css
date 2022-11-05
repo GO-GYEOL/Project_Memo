@@ -96,6 +96,8 @@ body {
 /* pageItemComponent */
 .page-item {
   width: 100%;
+  margin-bottom:30px;
+  background-color:pink;
 }
 
 /* image */
@@ -150,3 +152,10 @@ body {
 .dialog__submit {
   align-self: flex-end;
 }
+
+
+.mute-children * {
+  /* mute-children 내부의 모든 태그들을 *로 표시 가능 */
+  pointer-events:none;
+}
+
