@@ -9,7 +9,8 @@ interface SectionContainer extends Component, Composable {
   setOnCloseListener(closeEvent: OnCloseListener): void;
   setOnDragListener(dragEvent: OnDragListener): void;
   muteChildren(state: "mute" | "unmute"): void;
-  getBoundingRect() : DOMRect;
+  getBoundingRect(): DOMRect;
+  onDropped():void;
 }
 
 type SectionContainerConstructor = {
@@ -39,16 +40,23 @@ export class PageItemComponent
     };
     this.element.addEventListener("dragstart", () => {
       this.dragAction("start");
+      this.element.classList.add("lifted");
     });
     this.element.addEventListener("dragend", () => {
       this.dragAction("end");
+      this.element.classList.remove("lifted");
     });
     this.element.addEventListener("dragenter", () => {
       this.dragAction("enter");
+      this.element.classList.add("drop-area");
     });
     this.element.addEventListener("dragleave", () => {
       this.dragAction("leave");
+      this.element.classList.remove("drop-area");
     });
+  }
+  onDropped(){
+    this.element.classList.remove('drop-area');
   }
   addChild(component: Component) {
     const body = this.element.querySelector(".page-item__body")! as HTMLElement;
@@ -72,7 +80,7 @@ export class PageItemComponent
       this.element.classList.remove("mute-children");
     }
   }
-  getBoundingRect():DOMRect{
+  getBoundingRect(): DOMRect {
     return this.element.getBoundingClientRect();
   }
 }
@@ -84,29 +92,33 @@ export class PageComponent extends BaseComponent {
   constructor(
     private sectionContainerConstructor: SectionContainerConstructor
   ) {
-    super(`<ul class="page">This is PageComponent</ul>`);
-    this.element.addEventListener('dragover', (event:DragEvent)=>{
+    super(`<ul class="page"></ul>`);
+    this.element.addEventListener("dragover", (event: DragEvent) => {
       this.onDragOver(event);
     });
-    this.element.addEventListener('drop', (event:DragEvent)=>{
+    this.element.addEventListener("drop", (event: DragEvent) => {
       this.onDrop(event);
-    })
+    });
   }
 
-  onDragOver(event:DragEvent){
+  onDragOver(event: DragEvent) {
     event.preventDefault();
-    console.log("drag")
+    console.log("drag");
   }
-  onDrop(event:DragEvent){
+  onDrop(event: DragEvent) {
     event.preventDefault();
-    if(!this.dropTarget){
+    if (!this.dropTarget) {
       return;
     }
-    if(this.dragTarget && this.dragTarget !== this.dropTarget){
+    if (this.dragTarget && this.dragTarget !== this.dropTarget) {
       const dropY = event.clientY;
       const srcElement = this.dragTarget.getBoundingRect();
-      this.dragTarget.removeFrom(this.element)
-      this.dropTarget.attach(this.dragTarget, dropY < srcElement.y ? "beforebegin" : "afterend")
+      this.dragTarget.removeFrom(this.element);
+      this.dropTarget.attach(
+        this.dragTarget,
+        dropY < srcElement.y ? "beforebegin" : "afterend"
+      );
+      this.dropTarget.onDropped();
     }
   }
 
@@ -130,15 +142,14 @@ export class PageComponent extends BaseComponent {
           this.updateSection("unmute");
           break;
         case "enter":
-          console.log('enter')
+          console.log("enter");
           this.dropTarget = target;
           break;
         case "leave":
-          console.log('leave')
+          console.log("leave");
           this.dropTarget = undefined;
           break;
       }
-
     });
   }
   private updateSection(state: "mute" | "unmute") {
