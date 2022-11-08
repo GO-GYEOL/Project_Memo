@@ -118,8 +118,8 @@ export class PageComponent extends BaseComponent {
         this.dragTarget,
         dropY < srcElement.y ? "beforebegin" : "afterend"
       );
-      this.dropTarget.onDropped();
     }
+    this.dropTarget.onDropped();
   }
 
   addChild(component: BaseComponent) {

@@ -19,14 +19,15 @@ class App {
     this.pageComponent = new PageComponent(PageItemComponent);
     this.pageComponent.attachTo(appRoot);
 
+    this.pageComponent.addChild(new ToDoComponent("밥 새로 짓기", "완료"));
+    this.pageComponent.addChild(new NoteComponent("운동가기", "오후 7시"));
     this.pageComponent.addChild(
       new VideoComponent("비디오1", "https://www.youtube.com/embed/tzIzcr4EM6w")
     );
-    this.pageComponent.addChild(
-      new ImageComponent("이미지1", "https://picsum.photos/800/400.jpg")
-    );
-    this.pageComponent.addChild(new NoteComponent("asd", "zzz"));
-    this.pageComponent.addChild(new ToDoComponent("zzz", "qwe"));
+    // this.pageComponent.addChild(
+    //   new ImageComponent("이미지1", "https://picsum.photos/800/400.jpg")
+    // );
+
 
     this.activeMainButton<MediaSectionInput>(
       "#new-image",
